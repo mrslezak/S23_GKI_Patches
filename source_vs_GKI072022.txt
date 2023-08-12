@@ -1,0 +1,831 @@
+common/fs/dlog_hook.c								      <
+common/fs/crypto/fscrypt_knox_private.h						      <
+common/fs/crypto/ddar								      <
+common/fs/crypto/ddar/ddar_crypto.c						      <
+common/fs/crypto/ddar/ddar_crypto.h						      <
+common/fs/crypto/fscrypt_ddar.c							      <
+										      >	common/fs/fuse/OWNERS
+										      >	common/fs/f2fs/OWNERS
+common/fs/sdfat									      <
+common/fs/sdfat/dfr.h								      <
+common/fs/sdfat/api.c								      <
+common/fs/sdfat/core.c								      <
+common/fs/sdfat/misc.c								      <
+common/fs/sdfat/core_exfat.c							      <
+common/fs/sdfat/core_fat.c							      <
+common/fs/sdfat/sdfat.c								      <
+common/fs/sdfat/config.h							      <
+common/fs/sdfat/statistics.c							      <
+common/fs/sdfat/upcase.h							      <
+common/fs/sdfat/xattr.c								      <
+common/fs/sdfat/core.h								      <
+common/fs/sdfat/blkdev.c							      <
+common/fs/sdfat/sdfat.h								      <
+common/fs/sdfat/Kconfig								      <
+common/fs/sdfat/amap_smart.h							      <
+common/fs/sdfat/cache.c								      <
+common/fs/sdfat/fatent.c							      <
+common/fs/sdfat/version.h							      <
+common/fs/sdfat/mpage.c								      <
+common/fs/sdfat/amap_smart.c							      <
+common/fs/sdfat/Makefile							      <
+common/fs/sdfat/dfr.c								      <
+common/fs/sdfat/api.h								      <
+common/fs/sdfat/extent.c							      <
+common/fs/sdfat/sdfat_fs.h							      <
+common/fs/sdfat/nls.c								      <
+										      >	common/fs/unicode/.gitignore
+										      >	common/fs/incfs/OWNERS
+common/fs/proc/proc_avc.c							      <
+common/fs/proc/fslog.c								      <
+										      >	common/fs/OWNERS
+common/net/netfilter/xt_domainfilter.c						      <
+common/net/ncm									      <
+common/net/ncm/ncm.c								      <
+common/net/ncm/Kconfig								      <
+common/net/ncm/Makefile								      <
+										      >	common/net/bpfilter/.gitignore
+										      >	common/net/wireless/.gitignore
+										      >	common/net/OWNERS
+common/mm/kzerod.c								      <
+common/mm/sec_mm								      <
+common/mm/sec_mm/panic_handler.c						      <
+common/mm/sec_mm/dump_tasks.c							      <
+common/mm/sec_mm/Kconfig							      <
+common/mm/sec_mm/sec_mm.h							      <
+common/mm/sec_mm/sec_mm_init.c							      <
+common/mm/sec_mm/Makefile							      <
+common/mm/sec_mm/lowfile_detect.c						      <
+common/mm/io_record.c								      <
+										      >	common/mm/OWNERS
+										      >	common/arch/csky/kernel/vdso/.gitignore
+										      >	common/arch/m68k/kernel/.gitignore
+										      >	common/arch/.gitignore
+										      >	common/arch/riscv/boot/.gitignore
+										      >	common/arch/riscv/kernel/vdso/.gitignore
+										      >	common/arch/riscv/kernel/.gitignore
+										      >	common/arch/x86/crypto/.gitignore
+										      >	common/arch/x86/.gitignore
+										      >	common/arch/x86/entry/vdso/.gitignore
+										      >	common/arch/x86/entry/vdso/vdso32/.gitignore
+										      >	common/arch/x86/lib/.gitignore
+										      >	common/arch/x86/realmode/rm/.gitignore
+										      >	common/arch/x86/purgatory/.gitignore
+										      >	common/arch/x86/boot/.gitignore
+										      >	common/arch/x86/boot/compressed/.gitignore
+										      >	common/arch/x86/boot/tools/.gitignore
+										      >	common/arch/x86/um/vdso/.gitignore
+										      >	common/arch/x86/kernel/.gitignore
+										      >	common/arch/x86/kernel/cpu/.gitignore
+										      >	common/arch/x86/tools/.gitignore
+										      >	common/arch/x86/OWNERS
+										      >	common/arch/s390/purgatory/.gitignore
+										      >	common/arch/s390/boot/.gitignore
+										      >	common/arch/s390/boot/compressed/.gitignore
+										      >	common/arch/s390/kernel/.gitignore
+										      >	common/arch/s390/kernel/vdso64/.gitignore
+										      >	common/arch/s390/kernel/vdso32/.gitignore
+										      >	common/arch/s390/tools/.gitignore
+										      >	common/arch/powerpc/purgatory/.gitignore
+										      >	common/arch/powerpc/platforms/cell/spufs/.gitignore
+										      >	common/arch/powerpc/boot/.gitignore
+										      >	common/arch/powerpc/kernel/.gitignore
+										      >	common/arch/powerpc/kernel/vdso64/.gitignore
+										      >	common/arch/powerpc/kernel/vdso32/.gitignore
+										      >	common/arch/arc/boot/.gitignore
+										      >	common/arch/arc/kernel/.gitignore
+										      >	common/arch/parisc/boot/.gitignore
+										      >	common/arch/parisc/boot/compressed/.gitignore
+										      >	common/arch/parisc/kernel/.gitignore
+										      >	common/arch/openrisc/boot/.gitignore
+										      >	common/arch/openrisc/kernel/.gitignore
+										      >	common/arch/sparc/vdso/.gitignore
+										      >	common/arch/sparc/vdso/vdso32/.gitignore
+										      >	common/arch/sparc/boot/.gitignore
+										      >	common/arch/sparc/kernel/.gitignore
+										      >	common/arch/arm64/crypto/.gitignore
+common/arch/arm64/configs/consolidate.fragment					      <
+										      >	common/arch/arm64/kvm/.gitignore
+										      >	common/arch/arm64/kvm/hyp/nvhe/.gitignore
+										      >	common/arch/arm64/boot/.gitignore
+										      >	common/arch/arm64/kernel/vdso/.gitignore
+										      >	common/arch/arm64/kernel/.gitignore
+common/arch/arm64/kernel/uh_entry.S						      <
+										      >	common/arch/arm64/kernel/vdso32/.gitignore
+										      >	common/arch/arm64/OWNERS
+										      >	common/arch/nios2/boot/.gitignore
+										      >	common/arch/nios2/kernel/.gitignore
+										      >	common/arch/nds32/boot/.gitignore
+										      >	common/arch/nds32/kernel/vdso/.gitignore
+										      >	common/arch/nds32/kernel/.gitignore
+										      >	common/arch/h8300/kernel/.gitignore
+										      >	common/arch/microblaze/boot/.gitignore
+										      >	common/arch/microblaze/kernel/.gitignore
+										      >	common/arch/sh/boot/.gitignore
+										      >	common/arch/sh/boot/compressed/.gitignore
+										      >	common/arch/sh/kernel/.gitignore
+										      >	common/arch/sh/kernel/vsyscall/.gitignore
+										      >	common/arch/xtensa/boot/.gitignore
+										      >	common/arch/xtensa/boot/lib/.gitignore
+										      >	common/arch/xtensa/boot/boot-elf/.gitignore
+										      >	common/arch/xtensa/kernel/.gitignore
+common/arch/um/include/asm/io-mock.h						      <
+common/arch/um/include/asm/io-mock-shared.h					      <
+										      >	common/arch/um/.gitignore
+common/arch/um/kernel/io-mock.c							      <
+										      >	common/arch/ia64/kernel/.gitignore
+										      >	common/arch/arm/vdso/.gitignore
+										      >	common/arch/arm/crypto/.gitignore
+										      >	common/arch/arm/mach-at91/.gitignore
+										      >	common/arch/arm/mach-omap2/.gitignore
+										      >	common/arch/arm/boot/.gitignore
+										      >	common/arch/arm/boot/compressed/.gitignore
+										      >	common/arch/arm/kernel/.gitignore
+										      >	common/arch/arm/OWNERS
+										      >	common/arch/mips/vdso/.gitignore
+										      >	common/arch/mips/crypto/.gitignore
+										      >	common/arch/mips/boot/.gitignore
+										      >	common/arch/mips/boot/compressed/.gitignore
+										      >	common/arch/mips/boot/tools/.gitignore
+										      >	common/arch/mips/kernel/.gitignore
+										      >	common/arch/mips/tools/.gitignore
+										      >	common/arch/alpha/kernel/.gitignore
+common/crypto/fips140_integrity.c						      <
+common/crypto/fips140_test.h							      <
+common/crypto/fips140_out.c							      <
+common/crypto/fips140_test_tv.h							      <
+common/crypto/fips140_post.c							      <
+common/crypto/fips140.h								      <
+common/crypto/fips140_test.c							      <
+										      >	common/crypto/OWNERS
+common/include/net/ncm.h							      <
+common/include/linux/io_record.h						      <
+common/include/linux/input/input_booster.h					      <
+common/include/linux/netfilter/xt_domainfilter.h				      <
+common/include/linux/freecess.h							      <
+common/include/linux/proca.h							      <
+common/include/linux/platform_device_mock.h					      <
+common/include/linux/uh.h							      <
+common/include/linux/dsms.h							      <
+common/include/linux/mz.h							      <
+common/include/linux/proc_avc.h							      <
+common/include/linux/task_integrity.h						      <
+common/include/linux/hugepage_pool.h						      <
+common/include/linux/kasan-enabled.h						      <
+common/include/linux/kdp.h							      <
+common/include/linux/defex.h							      <
+										      >	common/include/linux/OWNERS
+common/include/linux/fslog.h							      <
+common/include/linux/rkp.h							      <
+common/include/kunit/params.h							      <
+common/include/kunit/strerror.h							      <
+common/include/kunit/mock.h							      <
+common/include/kunit/kunit-stream.h						      <
+common/include/kunit/string-stream.h						      <
+common/include/ddar								      <
+common/include/ddar/fs_request.h						      <
+common/include/ddar/dek_common.h						      <
+common/include/ddar/fs_handler.h						      <
+common/include/ddar/common.h							      <
+common/include/ddar/cache_cleanup.h						      <
+common/include/ddar/dd_i.h							      <
+common/include/ddar/dd.h							      <
+common/include/uapi/linux/netfilter/xt_domainfilter.h				      <
+										      >	common/include/uapi/linux/bcache.h
+										      >	common/include/uapi/linux/OWNERS
+common/include/trace/hooks/save_incpath.h					      <
+common/include/trace/hooks/xhci.h						      <
+common/include/trace/hooks/mz.h							      <
+common/include/trace/hooks/restore_incpath.h					      <
+common/include/trace/hooks/user.h						      <
+common/include/trace/events/tracing_mark_write.h				      <
+common/include/trace/events/sec_gmr.h						      <
+										      >	common/include/trace/events/OWNERS
+										      >	common/include/OWNERS
+										      >	common/.gitignore
+										      >	common/drivers/net/wan/.gitignore
+										      >	common/drivers/memory/.gitignore
+										      >	common/drivers/atm/.gitignore
+										      >	common/drivers/crypto/vmx/.gitignore
+										      >	common/drivers/tty/vt/.gitignore
+common/drivers/uh								      <
+common/drivers/uh/uh_debug_log.c						      <
+common/drivers/uh/kdp.c								      <
+common/drivers/uh/rkp_module_support.c						      <
+common/drivers/uh/rkp_test.c							      <
+common/drivers/uh/Makefile							      <
+common/drivers/uh/rkp.c								      <
+common/drivers/uh/kdp_test.c							      <
+common/drivers/dma-buf/dma-heap-trace.c						      <
+										      >	common/drivers/video/logo/.gitignore
+										      >	common/drivers/scsi/.gitignore
+										      >	common/drivers/scsi/aic7xxx/.gitignore
+										      >	common/drivers/eisa/.gitignore
+common/drivers/base/platform-mock.c						      <
+										      >	common/drivers/base/firmware_loader/builtin/.gitignore
+common/drivers/usb/core/usb_host_certify.c					      <
+										      >	common/drivers/comedi/drivers/ni_routing/tools/.gitignore
+common/drivers/staging/android/freecess_pkg.c					      <
+common/drivers/staging/android/lmkd_debug.c					      <
+common/drivers/staging/android/freecess.c					      <
+										      >	common/drivers/staging/greybus/tools/.gitignore
+										      >	common/drivers/staging/greybus/tools/Android.mk
+										      >	common/drivers/OWNERS
+										      >	common/drivers/gpu/drm/i915/.gitignore
+										      >	common/drivers/gpu/drm/radeon/.gitignore
+										      >	common/drivers/zorro/.gitignore
+common/drivers/md/bcache/bcache_ondisk.h					      <
+common/drivers/md/alta_bigdata.c						      <
+common/drivers/md/dm-verity-debug.c						      <
+common/drivers/md/dm-verity-debug.h						      <
+common/kunitconfigs								      |	common/.gitattributes
+common/kunitconfigs/kunitconfig.kunit						      <
+common/kunitconfigs/kunitconfig.gcov						      <
+common/scripts/crypto								      <
+common/scripts/crypto/fips_crypto_integrity.py					      <
+common/scripts/crypto/Utils.py							      <
+common/scripts/crypto/ELF.py							      <
+common/scripts/crypto/IntegrityRoutine.py					      <
+common/scripts/driver-dependencies.sh						      <
+										      >	common/scripts/.gitignore
+										      >	common/scripts/mod/.gitignore
+										      >	common/scripts/kconfig/.gitignore
+										      >	common/scripts/dtc/.gitignore
+										      >	common/scripts/gcc-plugins/.gitignore
+										      >	common/scripts/gdb/linux/.gitignore
+										      >	common/scripts/selinux/mdp/.gitignore
+										      >	common/scripts/selinux/genheaders/.gitignore
+										      >	common/scripts/basic/.gitignore
+										      >	common/scripts/genksyms/.gitignore
+										      >	common/.git
+										      >	common/.git/index
+										      >	common/.git/HEAD
+										      >	common/.git/branches
+										      >	common/.git/packed-refs
+										      >	common/.git/config
+										      >	common/.git/description
+										      >	common/.git/hooks
+										      >	common/.git/hooks/fsmonitor-watchman.sample
+										      >	common/.git/hooks/push-to-checkout.sample
+										      >	common/.git/hooks/update.sample
+										      >	common/.git/hooks/pre-applypatch.sample
+										      >	common/.git/hooks/pre-push.sample
+										      >	common/.git/hooks/pre-receive.sample
+										      >	common/.git/hooks/pre-merge-commit.sample
+										      >	common/.git/hooks/applypatch-msg.sample
+										      >	common/.git/hooks/pre-commit.sample
+										      >	common/.git/hooks/prepare-commit-msg.sample
+										      >	common/.git/hooks/commit-msg.sample
+										      >	common/.git/hooks/post-update.sample
+										      >	common/.git/hooks/pre-rebase.sample
+										      >	common/.git/objects
+										      >	common/.git/objects/pack
+										      >	common/.git/objects/pack/pack-e2ee5e58e9472bfa1f5f584ad90cec6c135567d1.pack
+										      >	common/.git/objects/pack/pack-e2ee5e58e9472bfa1f5f584ad90cec6c135567d1.idx
+										      >	common/.git/objects/info
+										      >	common/.git/info
+										      >	common/.git/info/exclude
+										      >	common/.git/refs
+										      >	common/.git/refs/tags
+										      >	common/.git/refs/tags/ASB-2019-10-05_mainline
+										      >	common/.git/refs/tags/android-mainline-5.13
+										      >	common/.git/refs/tags/ASB-2019-07-05_mainline
+										      >	common/.git/refs/tags/android-mainline-5.10
+										      >	common/.git/refs/tags/ASB-2022-06-05_13-5.15
+										      >	common/.git/refs/tags/ASB-2020-07-05_mainline
+										      >	common/.git/refs/tags/android-mainline-5.7
+										      >	common/.git/refs/tags/android13-5.15-2022-07_r7
+										      >	common/.git/refs/tags/ASB-2021-11-06_mainline
+										      >	common/.git/refs/tags/android-mainline-5.8
+										      >	common/.git/refs/tags/ASB-2020-11-05_mainline
+										      >	common/.git/refs/tags/ASB-2020-06-05_mainline
+										      >	common/.git/refs/tags/ASB-2021-12-05_13-5.15
+										      >	common/.git/refs/tags/ASB-2019-11-05_mainline
+										      >	common/.git/refs/tags/android-mainline-5.14
+										      >	common/.git/refs/tags/ASB-2022-04-05_13-5.15
+										      >	common/.git/refs/tags/ASB-2020-05-05_mainline
+										      >	common/.git/refs/tags/android13-5.15-2022-07_r5
+										      >	common/.git/refs/tags/ASB-2021-01-05_mainline
+										      >	common/.git/refs/tags/android13-5.15-2022-07_r2
+										      >	common/.git/refs/tags/android-mainline-5.9
+										      >	common/.git/refs/tags/ASB-2020-02-05_mainline
+										      >	common/.git/refs/tags/ASB-2022-07-05_13-5.15
+										      >	common/.git/refs/tags/android-mainline-5.11
+										      >	common/.git/refs/tags/ASB-2020-10-05_mainline
+										      >	common/.git/refs/tags/ASB-2020-04-05_mainline
+										      >	common/.git/refs/tags/ASB-2020-12-05_mainline
+										      >	common/.git/refs/tags/android13-5.15-2022-07_r3
+										      >	common/.git/refs/tags/ASB-2022-05-05_13-5.15
+										      >	common/.git/refs/tags/android13-5.15-2022-07_r6
+										      >	common/.git/refs/tags/ASB-2021-05-05_mainline
+										      >	common/.git/refs/tags/android-mainline-5.15
+										      >	common/.git/refs/tags/android13-5.15-2022-07_r8
+										      >	common/.git/refs/tags/ASB-2022-01-05_13-5.15
+										      >	common/.git/refs/tags/ASB-2021-02-05_mainline
+										      >	common/.git/refs/tags/android-mainline-5.5
+										      >	common/.git/refs/tags/ASB-2020-03-05_mainline
+										      >	common/.git/refs/tags/ASB-2022-03-05_13-5.15
+										      >	common/.git/refs/tags/ASB-2021-06-05_mainline
+										      >	common/.git/refs/tags/ASB-2022-02-05_13-5.15
+										      >	common/.git/refs/tags/ASB-2021-10-05_mainline
+										      >	common/.git/refs/tags/android13-5.15-2022-07_r1
+										      >	common/.git/refs/tags/android-mainline-5.12
+										      >	common/.git/refs/tags/ASB-2021-09-05_mainline
+										      >	common/.git/refs/tags/android13-5.15-2022-07_r4
+										      >	common/.git/refs/tags/android-mainline-5.6
+										      >	common/.git/refs/tags/ASB-2021-03-05_mainline
+										      >	common/.git/refs/tags/ASB-2021-07-05_mainline
+										      >	common/.git/refs/tags/ASB-2019-09-05_mainline
+										      >	common/.git/refs/tags/ASB-2020-01-05_mainline
+										      >	common/.git/refs/tags/ASB-2019-08-05_mainline
+										      >	common/.git/refs/tags/ASB-2021-04-05_mainline
+										      >	common/.git/refs/tags/android13-5.15-2022-07_r9
+										      >	common/.git/refs/tags/ASB-2020-09-05_mainline
+										      >	common/.git/refs/tags/ASB-2021-08-05_mainline
+										      >	common/.git/refs/tags/ASB-2019-12-05_mainline
+										      >	common/.git/refs/tags/ASB-2020-08-05_mainline
+										      >	common/.git/refs/tags/android13-5.15-2022-06_r1
+										      >	common/.git/refs/heads
+										      >	common/.git/refs/heads/deprecated
+										      >	common/.git/refs/heads/deprecated/android13-5.15-2022-07
+										      >	common/.git/logs
+										      >	common/.git/logs/HEAD
+										      >	common/.git/logs/refs
+										      >	common/.git/logs/refs/heads
+										      >	common/.git/logs/refs/heads/deprecated
+										      >	common/.git/logs/refs/heads/deprecated/android13-5.15-2022-07
+common/android/abi_gki_aarch64_galaxy_presubmit					      <
+common/android/abi_gki_aarch64_sunxi						      <
+common/android/abi_gki_aarch64_galaxy_grey					      <
+common/android/abi_gki_aarch64_virtual_device_removed				      <
+										      >	common/android/OWNERS
+										      >	common/Documentation/filesystems/OWNERS
+										      >	common/Documentation/.gitignore
+										      >	common/Documentation/devicetree/bindings/.gitignore
+										      >	common/Documentation/ABI/testing/OWNERS
+										      >	common/Documentation/vm/.gitignore
+common/build.config.gki_consolidate.aarch64					      <
+										      >	common/lib/.gitignore
+common/lib/kunit/mock-test.c							      <
+common/lib/kunit/kunit-stream.c							      <
+common/lib/kunit/strerror.c							      <
+common/lib/kunit/common-mocks.c							      <
+common/lib/kunit/mock.c								      <
+common/lib/kunit/strerror-test.c						      <
+common/lib/kunit/mock-macro-test.c						      <
+										      >	common/lib/raid6/.gitignore
+										      >	common/certs/.gitignore
+										      >	common/usr/include/.gitignore
+										      >	common/usr/.gitignore
+										      >	common/sound/oss/.gitignore
+										      >	common/security/tomoyo/.gitignore
+										      >	common/security/apparmor/.gitignore
+common/security/ddar								      <
+common/security/ddar/dek_sysfs.c						      <
+common/security/ddar/cache_cleanup.c						      <
+common/security/ddar/dd_common.h						      <
+common/security/ddar/dd_core.c							      <
+common/security/ddar/dd_kernel_crypto.c						      <
+common/security/ddar/fs_handler.c						      <
+common/security/ddar/dek.c							      <
+common/security/ddar/Makefile							      <
+common/security/ddar/dd_xattr.c							      <
+										      >	common/security/selinux/.gitignore
+common/security/samsung								      <
+common/security/samsung/dsms							      <
+common/security/samsung/dsms/dsms_access_control.h				      <
+common/security/samsung/dsms/dsms_kernel_api.h					      <
+common/security/samsung/dsms/dsms_preboot_buffer.c				      <
+common/security/samsung/dsms/dsms_access_control.c				      <
+common/security/samsung/dsms/dsms_kernel_api.c					      <
+common/security/samsung/dsms/dsms_policy.c					      <
+common/security/samsung/dsms/dsms_netlink.h					      <
+common/security/samsung/dsms/dsms_rate_limit.h					      <
+common/security/samsung/dsms/kunit_test						      <
+common/security/samsung/dsms/kunit_test/security_dsms_init_test.c		      <
+common/security/samsung/dsms/kunit_test/security_dsms_netlink_test.c		      <
+common/security/samsung/dsms/kunit_test/security_dsms_policy_test.c		      <
+common/security/samsung/dsms/kunit_test/dsms_test_utils.h			      <
+common/security/samsung/dsms/kunit_test/security_dsms_rate_limit_test.c		      <
+common/security/samsung/dsms/kunit_test/security_dsms_test_utils_test.c		      <
+common/security/samsung/dsms/kunit_test/dsms_test_utils.c			      <
+common/security/samsung/dsms/kunit_test/Makefile				      <
+common/security/samsung/dsms/kunit_test/security_dsms_preboot_buffer_test.c	      <
+common/security/samsung/dsms/kunit_test/security_dsms_debug_test.c		      <
+common/security/samsung/dsms/kunit_test/security_dsms_kernel_api_test.c		      <
+common/security/samsung/dsms/kunit_test/security_dsms_access_control_test.c	      <
+common/security/samsung/dsms/dsms_preboot_buffer.h				      <
+common/security/samsung/dsms/Kconfig						      <
+common/security/samsung/dsms/dsms_rate_limit.c					      <
+common/security/samsung/dsms/dsms_init.h					      <
+common/security/samsung/dsms/dsms_netlink_protocol.h				      <
+common/security/samsung/dsms/Makefile						      <
+common/security/samsung/dsms/dsms_test.h					      <
+common/security/samsung/dsms/dsms_init.c					      <
+common/security/samsung/dsms/dsms_netlink.c					      <
+common/security/samsung/mz_tee_driver						      <
+common/security/samsung/mz_tee_driver/mz_tee_driver_teegris.c			      <
+common/security/samsung/mz_tee_driver/mz_tee_driver.c				      <
+common/security/samsung/mz_tee_driver/security_mz_tee_driver.py			      <
+common/security/samsung/mz_tee_driver/Kconfig					      <
+common/security/samsung/mz_tee_driver/mz_tee_driver_qc.c			      <
+common/security/samsung/mz_tee_driver/Makefile					      <
+common/security/samsung/five							      <
+common/security/samsung/five/five_hooks.c					      <
+common/security/samsung/five/five_cache.c					      <
+common/security/samsung/five/five_cert.c					      <
+common/security/samsung/five/five_pa.h						      <
+common/security/samsung/five/five_crypto_comp.h					      <
+common/security/samsung/five/five_testing.h					      <
+common/security/samsung/five/five_porting.h					      <
+common/security/samsung/five/task_integrity.c					      <
+common/security/samsung/five/kunit_test						      <
+common/security/samsung/five/kunit_test/five_dmverity_test.c			      <
+common/security/samsung/five/kunit_test/five_pa_test.c				      <
+common/security/samsung/five/kunit_test/five_cache_test.c			      <
+common/security/samsung/five/kunit_test/five_state_test.c			      <
+common/security/samsung/five/kunit_test/test_helpers.h				      <
+common/security/samsung/five/kunit_test/five_keyring_test.c			      <
+common/security/samsung/five/kunit_test/five_audit_test.c			      <
+common/security/samsung/five/kunit_test/five_lv_test.c				      <
+common/security/samsung/five/kunit_test/task_integrity_test.c			      <
+common/security/samsung/five/kunit_test/five_file.c				      <
+common/security/samsung/five/kunit_test/five_dsms_test.c			      <
+common/security/samsung/five/kunit_test/five_cert_test.c			      <
+common/security/samsung/five/kunit_test/five_file.h				      <
+common/security/samsung/five/kunit_test/Makefile				      <
+common/security/samsung/five/kunit_test/five_crypto_test.c			      <
+common/security/samsung/five/five_main.c					      <
+common/security/samsung/five/five_dsms.h					      <
+common/security/samsung/five/Kconfig						      <
+common/security/samsung/five/five_dmverity.c					      <
+common/security/samsung/five/gki						      <
+common/security/samsung/five/gki/five_hooks.c					      <
+common/security/samsung/five/gki/five_cache.c					      <
+common/security/samsung/five/gki/five_tint_dev.c				      <
+common/security/samsung/five/gki/task_integrity.c				      <
+common/security/samsung/five/gki/five_iint.c					      <
+common/security/samsung/five/gki/five_main.c					      <
+common/security/samsung/five/gki/five_vfs.h					      <
+common/security/samsung/five/gki/five_audit.h					      <
+common/security/samsung/five/gki/five_state.c					      <
+common/security/samsung/five/gki/five_pa.c					      <
+common/security/samsung/five/gki/five.h						      <
+common/security/samsung/five/gki/five_iint.h					      <
+common/security/samsung/five/gki/five_crypto.c					      <
+common/security/samsung/five/gki/task_integrity.h				      <
+common/security/samsung/five/gki/five_tee_interface.c				      <
+common/security/samsung/five/gki/five_appraise.c				      <
+common/security/samsung/five/gki/five_init.c					      <
+common/security/samsung/five/gki/five_tint_dev.h				      <
+common/security/samsung/five/gki/five_audit.c					      <
+common/security/samsung/five/gki/five_vfs.c					      <
+common/security/samsung/five/gki/five_hooks.h					      <
+common/security/samsung/five/gki/five_cache.h					      <
+common/security/samsung/five/gki/five_tee_interface.h				      <
+common/security/samsung/five/five_audit.h					      <
+common/security/samsung/five/five_state.c					      <
+common/security/samsung/five/five_crypto.h					      <
+common/security/samsung/five/five_pa.c						      <
+common/security/samsung/five/five_state.h					      <
+common/security/samsung/five/five_cert_builtin.S				      <
+common/security/samsung/five/five_tee_api.h					      <
+common/security/samsung/five/five.h						      <
+common/security/samsung/five/five_crypto.c					      <
+common/security/samsung/five/five_tee_interface.c				      <
+common/security/samsung/five/five_appraise.c					      <
+common/security/samsung/five/five_init.c					      <
+common/security/samsung/five/Makefile						      <
+common/security/samsung/five/five_audit.c					      <
+common/security/samsung/five/s_os						      <
+common/security/samsung/five/s_os/five_main.c					      <
+common/security/samsung/five/s_os/five_appraise.c				      <
+common/security/samsung/five/five_hooks.h					      <
+common/security/samsung/five/five_dmverity.h					      <
+common/security/samsung/five/five_lv.h						      <
+common/security/samsung/five/x509_five_user.der					      <
+common/security/samsung/five/five_lv.c						      <
+common/security/samsung/five/five_dsms.c					      <
+common/security/samsung/five/five_cache.h					      <
+common/security/samsung/five/x509_five_eng.der					      <
+common/security/samsung/five/five_tee_interface.h				      <
+common/security/samsung/five/five_keyring.c					      <
+common/security/samsung/five/five_cert.h					      <
+common/security/samsung/defex_lsm						      <
+common/security/samsung/defex_lsm/defex_packed_rules.inc			      <
+common/security/samsung/defex_lsm/feature_immutable				      <
+common/security/samsung/defex_lsm/feature_immutable/defex_immutable.c		      <
+common/security/samsung/defex_lsm/feature_immutable/kunit_test			      <
+common/security/samsung/defex_lsm/feature_immutable/kunit_test/defex_immutable_test.c <
+common/security/samsung/defex_lsm/feature_immutable/kunit_test/Makefile		      <
+common/security/samsung/defex_lsm/defex_packed_rules.bin			      <
+common/security/samsung/defex_lsm/include					      <
+common/security/samsung/defex_lsm/include/defex_config.h			      <
+common/security/samsung/defex_lsm/include/defex_tailer.h			      <
+common/security/samsung/defex_lsm/include/defex_caches.h			      <
+common/security/samsung/defex_lsm/include/defex_test.h				      <
+common/security/samsung/defex_lsm/include/defex_internal.h			      <
+common/security/samsung/defex_lsm/include/defex_rules.h				      <
+common/security/samsung/defex_lsm/include/ptree.h				      <
+common/security/samsung/defex_lsm/include/defex_catch_list.h			      <
+common/security/samsung/defex_lsm/include/defex_sign.h				      <
+common/security/samsung/defex_lsm/include/defex_debug.h				      <
+common/security/samsung/defex_lsm/cert						      <
+common/security/samsung/defex_lsm/cert/defex_sign.c				      <
+common/security/samsung/defex_lsm/cert/kunit_test				      <
+common/security/samsung/defex_lsm/cert/kunit_test/defex_sign_test.c		      <
+common/security/samsung/defex_lsm/cert/kunit_test/Makefile			      <
+common/security/samsung/defex_lsm/cert/defex_cert.S				      <
+common/security/samsung/defex_lsm/cert/x509_five_user.der			      <
+common/security/samsung/defex_lsm/cert/x509_five_eng.der			      <
+common/security/samsung/defex_lsm/feature_trusted_map				      <
+common/security/samsung/defex_lsm/feature_trusted_map/include			      <
+common/security/samsung/defex_lsm/feature_trusted_map/include/dtm_utils.h	      <
+common/security/samsung/defex_lsm/feature_trusted_map/include/dtm_log.h		      <
+common/security/samsung/defex_lsm/feature_trusted_map/include/dtm.h		      <
+common/security/samsung/defex_lsm/feature_trusted_map/include/dtm_engine.h	      <
+common/security/samsung/defex_lsm/feature_trusted_map/defex_trusted_map.c	      <
+common/security/samsung/defex_lsm/feature_trusted_map/dtm_engine.c		      <
+common/security/samsung/defex_lsm/feature_trusted_map/dtm.c			      <
+common/security/samsung/defex_lsm/feature_trusted_map/kunit_test		      <
+common/security/samsung/defex_lsm/feature_trusted_map/kunit_test/Makefile	      <
+common/security/samsung/defex_lsm/feature_trusted_map/ptree.c			      <
+common/security/samsung/defex_lsm/feature_trusted_map/dtm_utils.c		      <
+common/security/samsung/defex_lsm/feature_trusted_map/dtm_engine_defaultpolicy.h      <
+common/security/samsung/defex_lsm/feature_trusted_map/dtm_log.c			      <
+common/security/samsung/defex_lsm/pack_rules					      <
+common/security/samsung/defex_lsm/defex_rules.c					      <
+common/security/samsung/defex_lsm/feature_safeplace				      <
+common/security/samsung/defex_lsm/feature_safeplace/kunit_test			      <
+common/security/samsung/defex_lsm/feature_safeplace/kunit_test/defex_safeplace_test.c <
+common/security/samsung/defex_lsm/feature_safeplace/kunit_test/Makefile		      <
+common/security/samsung/defex_lsm/feature_safeplace/defex_safeplace.c		      <
+common/security/samsung/defex_lsm/feature_safeplace/defex_integrity.c		      <
+common/security/samsung/defex_lsm/pack_rules.c					      <
+common/security/samsung/defex_lsm/Kconfig					      <
+common/security/samsung/defex_lsm/catch_engine					      <
+common/security/samsung/defex_lsm/catch_engine/kunit_test			      <
+common/security/samsung/defex_lsm/catch_engine/kunit_test/defex_catch_list_test.c     <
+common/security/samsung/defex_lsm/catch_engine/kunit_test/defex_catch_list_compat_tes <
+common/security/samsung/defex_lsm/catch_engine/kunit_test/defex_ht_test.c	      <
+common/security/samsung/defex_lsm/catch_engine/kunit_test/defex_caches_test.c	      <
+common/security/samsung/defex_lsm/catch_engine/kunit_test/Makefile		      <
+common/security/samsung/defex_lsm/catch_engine/defex_catch_list.c		      <
+common/security/samsung/defex_lsm/catch_engine/defex_catch_list.inc		      <
+common/security/samsung/defex_lsm/catch_engine/defex_ht.c			      <
+common/security/samsung/defex_lsm/catch_engine/defex_catch_list_compat.c	      <
+common/security/samsung/defex_lsm/catch_engine/defex_caches.c			      <
+common/security/samsung/defex_lsm/feature_privilege_escalation_detection	      <
+common/security/samsung/defex_lsm/feature_privilege_escalation_detection/defex_priv.c <
+common/security/samsung/defex_lsm/feature_privilege_escalation_detection/kunit_test   <
+common/security/samsung/defex_lsm/feature_privilege_escalation_detection/kunit_test/M <
+common/security/samsung/defex_lsm/feature_privilege_escalation_detection/kunit_test/d <
+common/security/samsung/defex_lsm/debug						      <
+common/security/samsung/defex_lsm/debug/defex_debug.c				      <
+common/security/samsung/defex_lsm/debug/kunit_test				      <
+common/security/samsung/defex_lsm/debug/kunit_test/Makefile			      <
+common/security/samsung/defex_lsm/debug/kunit_test/defex_debug_test.c		      <
+common/security/samsung/defex_lsm/core						      <
+common/security/samsung/defex_lsm/core/defex_get_mode.c				      <
+common/security/samsung/defex_lsm/core/defex_sysfs.c				      <
+common/security/samsung/defex_lsm/core/defex_rules_proc.c			      <
+common/security/samsung/defex_lsm/core/kunit_test				      <
+common/security/samsung/defex_lsm/core/kunit_test/defex_rules_proc_test.c	      <
+common/security/samsung/defex_lsm/core/kunit_test/defex_common_test.c		      <
+common/security/samsung/defex_lsm/core/kunit_test/defex_lsm_test.c		      <
+common/security/samsung/defex_lsm/core/kunit_test/defex_sysfs_test.c		      <
+common/security/samsung/defex_lsm/core/kunit_test/defex_get_mode_test.c		      <
+common/security/samsung/defex_lsm/core/kunit_test/defex_main_test.c		      <
+common/security/samsung/defex_lsm/core/kunit_test/Makefile			      <
+common/security/samsung/defex_lsm/core/defex_tailer.c				      <
+common/security/samsung/defex_lsm/core/defex_main.c				      <
+common/security/samsung/defex_lsm/core/defex_common.c				      <
+common/security/samsung/defex_lsm/core/defex_lsm.c				      <
+common/security/samsung/defex_lsm/Makefile					      <
+common/security/samsung/mz							      <
+common/security/samsung/mz/include						      <
+common/security/samsung/mz/include/linux					      <
+common/security/samsung/mz/include/linux/mz.h					      <
+common/security/samsung/mz/mz_page.h						      <
+common/security/samsung/mz/mz_page.c						      <
+common/security/samsung/mz/mz_crypto.c						      <
+common/security/samsung/mz/mz.c							      <
+common/security/samsung/mz/Kconfig						      <
+common/security/samsung/mz/mz_log.c						      <
+common/security/samsung/mz/mz_log.h						      <
+common/security/samsung/mz/mz.h							      <
+common/security/samsung/mz/mz_mem.c						      <
+common/security/samsung/mz/test							      <
+common/security/samsung/mz/test/security_mz_test.c				      <
+common/security/samsung/mz/test/Makefile					      <
+common/security/samsung/mz/Makefile						      <
+common/security/samsung/mz/mz_internal.h					      <
+common/security/samsung/mz/mz_page_v5_10.c					      <
+common/security/samsung/mz/mz_ioctl.c						      <
+common/security/samsung/proca							      <
+common/security/samsung/proca/proca_certificate.asn1				      <
+common/security/samsung/proca/proca_table.c					      <
+common/security/samsung/proca/proca_config.c					      <
+common/security/samsung/proca/proca_task_descr.h				      <
+common/security/samsung/proca/kunit_test					      <
+common/security/samsung/proca/kunit_test/proca_identity_test.c			      <
+common/security/samsung/proca/kunit_test/five					      <
+common/security/samsung/proca/kunit_test/five/Makefile				      <
+common/security/samsung/proca/kunit_test/proca_test_certificate.h		      <
+common/security/samsung/proca/kunit_test/proca_table_test.c			      <
+common/security/samsung/proca/kunit_test/proca_certificate_test.c		      <
+common/security/samsung/proca/kunit_test/Makefile				      <
+common/security/samsung/proca/security_proca.py					      <
+common/security/samsung/proca/Kconfig						      <
+common/security/samsung/proca/gaf						      <
+common/security/samsung/proca/gaf/gaf_v3.c					      <
+common/security/samsung/proca/gaf/gaf_v4.c					      <
+common/security/samsung/proca/gaf/gaf_v5.c					      <
+common/security/samsung/proca/gaf/gaf_v6.c					      <
+common/security/samsung/proca/gaf/Kconfig					      <
+common/security/samsung/proca/gaf/proca_gaf.h					      <
+common/security/samsung/proca/gaf/Makefile					      <
+common/security/samsung/proca/proca_certificate.c				      <
+common/security/samsung/proca/proca_porting.h					      <
+common/security/samsung/proca/proca_lsm.c					      <
+common/security/samsung/proca/proca_task_descr.c				      <
+common/security/samsung/proca/proca_identity.c					      <
+common/security/samsung/proca/proca_table.h					      <
+common/security/samsung/proca/proca_fcntl.c					      <
+common/security/samsung/proca/Makefile						      <
+common/security/samsung/proca/s_os						      <
+common/security/samsung/proca/s_os/proca_lsm.c					      <
+common/security/samsung/proca/proca_certificate.h				      <
+common/security/samsung/proca/proca_config.h					      <
+common/security/samsung/proca/proca_identity.h					      <
+common/security/samsung/proca/proca_log.h					      <
+										      >	common/block/OWNERS
+										      >	common/samples/timers/.gitignore
+										      >	common/samples/auxdisplay/.gitignore
+										      >	common/samples/bpf/.gitignore
+										      >	common/samples/watchdog/.gitignore
+										      >	common/samples/binderfs/.gitignore
+										      >	common/samples/uhid/.gitignore
+										      >	common/samples/landlock/.gitignore
+										      >	common/samples/seccomp/.gitignore
+										      >	common/samples/vfs/.gitignore
+										      >	common/samples/watch_queue/.gitignore
+										      >	common/samples/mei/.gitignore
+										      >	common/samples/pidfd/.gitignore
+										      >	common/samples/hidraw/.gitignore
+										      >	common/samples/connector/.gitignore
+										      >	common/samples/nitro_enclaves/.gitignore
+common/init/Kconfig.gki-debug							      <
+										      >	common/kernel/.gitignore
+										      >	common/kernel/bpf/preload/.gitignore
+										      >	common/kernel/bpf/preload/iterators/.gitignore
+										      >	common/kernel/sched/OWNERS
+										      >	common/kernel/debug/kdb/.gitignore
+common/kernel/trace/trace_tracing_mark_write.c					      <
+										      >	common/tools/virtio/.gitignore
+										      >	common/tools/power/x86/turbostat/.gitignore
+										      >	common/tools/power/x86/intel-speed-select/.gitignore
+										      >	common/tools/power/acpi/.gitignore
+										      >	common/tools/power/cpupower/.gitignore
+										      >	common/tools/bpf/runqslower/.gitignore
+										      >	common/tools/bpf/.gitignore
+										      >	common/tools/bpf/bpftool/.gitignore
+										      >	common/tools/bpf/resolve_btfids/.gitignore
+										      >	common/tools/leds/.gitignore
+										      >	common/tools/cgroup/.gitignore
+										      >	common/tools/iio/.gitignore
+										      >	common/tools/gpio/.gitignore
+										      >	common/tools/lib/bpf/.gitignore
+										      >	common/tools/lib/lockdep/.gitignore
+										      >	common/tools/lib/traceevent/.gitignore
+										      >	common/tools/thermal/tmon/.gitignore
+										      >	common/tools/bootconfig/.gitignore
+										      >	common/tools/tracing/latency/.gitignore
+										      >	common/tools/perf/.gitignore
+										      >	common/tools/perf/tests/.gitignore
+										      >	common/tools/perf/util/bpf_skel/.gitignore
+										      >	common/tools/testing/selftests/tc-testing/.gitignore
+										      >	common/tools/testing/selftests/safesetid/.gitignore
+										      >	common/tools/testing/selftests/capabilities/.gitignore
+										      >	common/tools/testing/selftests/efivarfs/.gitignore
+										      >	common/tools/testing/selftests/clone3/.gitignore
+										      >	common/tools/testing/selftests/net/.gitignore
+										      >	common/tools/testing/selftests/net/forwarding/.gitignore
+										      >	common/tools/testing/selftests/net/mptcp/.gitignore
+										      >	common/tools/testing/selftests/filesystems/.gitignore
+										      >	common/tools/testing/selftests/filesystems/binderfs/.gitignore
+										      >	common/tools/testing/selftests/filesystems/incfs/.gitignore
+										      >	common/tools/testing/selftests/filesystems/incfs/OWNERS
+										      >	common/tools/testing/selftests/filesystems/epoll/.gitignore
+										      >	common/tools/testing/selftests/fpu/.gitignore
+										      >	common/tools/testing/selftests/rcutorture/formal/srcu-cbmc/include/linux/.gitignore
+										      >	common/tools/testing/selftests/rcutorture/formal/srcu-cbmc/.gitignore
+										      >	common/tools/testing/selftests/rcutorture/formal/srcu-cbmc/tests/store_buffering/.git
+										      >	common/tools/testing/selftests/rcutorture/.gitignore
+										      >	common/tools/testing/selftests/sync/.gitignore
+										      >	common/tools/testing/selftests/syscall_user_dispatch/.gitignore
+										      >	common/tools/testing/selftests/pstore/.gitignore
+										      >	common/tools/testing/selftests/timers/.gitignore
+										      >	common/tools/testing/selftests/breakpoints/.gitignore
+										      >	common/tools/testing/selftests/membarrier/.gitignore
+										      >	common/tools/testing/selftests/.gitignore
+										      >	common/tools/testing/selftests/move_mount_set_group/.gitignore
+										      >	common/tools/testing/selftests/drivers/.gitignore
+										      >	common/tools/testing/selftests/sgx/.gitignore
+										      >	common/tools/testing/selftests/prctl/.gitignore
+										      >	common/tools/testing/selftests/mount/.gitignore
+										      >	common/tools/testing/selftests/x86/.gitignore
+										      >	common/tools/testing/selftests/bpf/verifier/.gitignore
+										      >	common/tools/testing/selftests/bpf/prog_tests/.gitignore
+										      >	common/tools/testing/selftests/bpf/map_tests/.gitignore
+										      >	common/tools/testing/selftests/bpf/.gitignore
+										      >	common/tools/testing/selftests/bpf/bpf_testmod/.gitignore
+										      >	common/tools/testing/selftests/futex/functional/.gitignore
+										      >	common/tools/testing/selftests/sched/.gitignore
+										      >	common/tools/testing/selftests/netfilter/.gitignore
+										      >	common/tools/testing/selftests/powerpc/cache_shape/.gitignore
+										      >	common/tools/testing/selftests/powerpc/mm/.gitignore
+										      >	common/tools/testing/selftests/powerpc/vphn/.gitignore
+										      >	common/tools/testing/selftests/powerpc/pmu/.gitignore
+										      >	common/tools/testing/selftests/powerpc/pmu/ebb/.gitignore
+										      >	common/tools/testing/selftests/powerpc/stringloops/.gitignore
+										      >	common/tools/testing/selftests/powerpc/signal/.gitignore
+										      >	common/tools/testing/selftests/powerpc/syscalls/.gitignore
+										      >	common/tools/testing/selftests/powerpc/primitives/.gitignore
+										      >	common/tools/testing/selftests/powerpc/copyloops/.gitignore
+										      >	common/tools/testing/selftests/powerpc/security/.gitignore
+										      >	common/tools/testing/selftests/powerpc/dscr/.gitignore
+										      >	common/tools/testing/selftests/powerpc/benchmarks/.gitignore
+										      >	common/tools/testing/selftests/powerpc/tm/.gitignore
+										      >	common/tools/testing/selftests/powerpc/switch_endian/.gitignore
+										      >	common/tools/testing/selftests/powerpc/math/.gitignore
+										      >	common/tools/testing/selftests/powerpc/alignment/.gitignore
+										      >	common/tools/testing/selftests/powerpc/nx-gzip/.gitignore
+										      >	common/tools/testing/selftests/powerpc/ptrace/.gitignore
+										      >	common/tools/testing/selftests/firmware/.gitignore
+										      >	common/tools/testing/selftests/lkdtm/.gitignore
+										      >	common/tools/testing/selftests/rseq/.gitignore
+										      >	common/tools/testing/selftests/mqueue/.gitignore
+										      >	common/tools/testing/selftests/cgroup/.gitignore
+										      >	common/tools/testing/selftests/watchdog/.gitignore
+										      >	common/tools/testing/selftests/exec/.gitignore
+										      >	common/tools/testing/selftests/gpio/.gitignore
+										      >	common/tools/testing/selftests/rtc/.gitignore
+										      >	common/tools/testing/selftests/arm64/tags/.gitignore
+										      >	common/tools/testing/selftests/arm64/mte/.gitignore
+										      >	common/tools/testing/selftests/arm64/signal/.gitignore
+										      >	common/tools/testing/selftests/arm64/pauth/.gitignore
+										      >	common/tools/testing/selftests/arm64/fp/.gitignore
+										      >	common/tools/testing/selftests/arm64/bti/.gitignore
+										      >	common/tools/testing/selftests/arm64/bti/gen
+										      >	common/tools/testing/selftests/arm64/bti/gen/.gitignore
+										      >	common/tools/testing/selftests/size/.gitignore
+										      >	common/tools/testing/selftests/ptp/.gitignore
+										      >	common/tools/testing/selftests/wireguard/qemu/.gitignore
+										      >	common/tools/testing/selftests/mount_setattr/.gitignore
+										      >	common/tools/testing/selftests/ipc/.gitignore
+										      >	common/tools/testing/selftests/perf_events/.gitignore
+										      >	common/tools/testing/selftests/kvm/.gitignore
+										      >	common/tools/testing/selftests/mincore/.gitignore
+										      >	common/tools/testing/selftests/media_tests/.gitignore
+										      >	common/tools/testing/selftests/nci/.gitignore
+										      >	common/tools/testing/selftests/ir/.gitignore
+										      >	common/tools/testing/selftests/pid_namespace/.gitignore
+										      >	common/tools/testing/selftests/damon/.gitignore
+										      >	common/tools/testing/selftests/landlock/.gitignore
+										      >	common/tools/testing/selftests/tmpfs/.gitignore
+										      >	common/tools/testing/selftests/kcmp/.gitignore
+										      >	common/tools/testing/selftests/seccomp/.gitignore
+										      >	common/tools/testing/selftests/vm/.gitignore
+										      >	common/tools/testing/selftests/sparc64/drivers/.gitignore
+										      >	common/tools/testing/selftests/timens/.gitignore
+										      >	common/tools/testing/selftests/nsfs/.gitignore
+										      >	common/tools/testing/selftests/core/.gitignore
+										      >	common/tools/testing/selftests/resctrl/.gitignore
+										      >	common/tools/testing/selftests/openat2/.gitignore
+										      >	common/tools/testing/selftests/intel_pstate/.gitignore
+										      >	common/tools/testing/selftests/proc/.gitignore
+										      >	common/tools/testing/selftests/pidfd/.gitignore
+										      >	common/tools/testing/selftests/ftrace/.gitignore
+										      >	common/tools/testing/selftests/ia64/.gitignore
+										      >	common/tools/testing/selftests/sigaltstack/.gitignore
+										      >	common/tools/testing/selftests/splice/.gitignore
+										      >	common/tools/testing/selftests/memfd/.gitignore
+										      >	common/tools/testing/selftests/vDSO/.gitignore
+										      >	common/tools/testing/selftests/rlimits/.gitignore
+										      >	common/tools/testing/selftests/ptrace/.gitignore
+										      >	common/tools/testing/kunit/.gitignore
+										      >	common/tools/testing/vsock/.gitignore
+										      >	common/tools/testing/radix-tree/.gitignore
+										      >	common/tools/usb/.gitignore
+										      >	common/tools/usb/usbip/.gitignore
+										      >	common/tools/vm/.gitignore
+										      >	common/tools/build/.gitignore
+										      >	common/tools/build/feature/.gitignore
+										      >	common/tools/pcmcia/.gitignore
+										      >	common/tools/memory-model/.gitignore
+										      >	common/tools/memory-model/litmus-tests/.gitignore
+										      >	common/tools/objtool/.gitignore
+										      >	common/tools/spi/.gitignore
+										      >	common/tools/laptop/dslm/.gitignore
+										      >	common/tools/accounting/.gitignore
