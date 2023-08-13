@@ -1436,11 +1436,6 @@ struct task_struct {
 	struct mem_cgroup		*active_memcg;
 #endif
 
-#ifdef CONFIG_TASK_HAS_ALLOC_FREE_STAT
-	unsigned long long alloc_sum;
-	unsigned long long free_sum;
-#endif
-
 #ifdef CONFIG_BLK_CGROUP
 	struct request_queue		*throttle_queue;
 #endif
@@ -1834,7 +1829,9 @@ current_restore_flags(unsigned long orig_flags, unsigned long flags)
 }
 
 extern int cpuset_cpumask_can_shrink(const struct cpumask *cur, const struct cpumask *trial);
-extern int task_can_attach(struct task_struct *p, const struct cpumask *cs_cpus_allowed);
+extern int task_can_attach(struct task_struct *p);
+extern int dl_bw_alloc(int cpu, u64 dl_bw);
+extern void dl_bw_free(int cpu, u64 dl_bw);
 
 #ifdef CONFIG_RT_SOFTINT_OPTIMIZATION
 extern bool cpupri_check_rt(void);

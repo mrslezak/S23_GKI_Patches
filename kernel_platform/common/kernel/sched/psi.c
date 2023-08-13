@@ -151,9 +151,7 @@
 #include <linux/psi.h>
 #include "sched.h"
 
-#ifdef CONFIG_PROC_FSLOG
-#include <linux/fslog.h>
-#endif
+#include <trace/hooks/psi.h>
 
 static int psi_bug __read_mostly;
 
@@ -182,9 +180,6 @@ __setup("psi=", setup_psi);
 #define WINDOW_MAX_US 10000000	/* Max window size is 10s */
 #define UPDATES_PER_WINDOW 10	/* 10 updates per window */
 
-#define MONITOR_WINDOW_MIN_NS 1000000000 /* 1s */
-#define MONITOR_THRESHOLD_MIN_NS 100000000 /* 100ms */
-
 /* Sampling frequency in nanoseconds */
 static u64 psi_period __read_mostly;
 
@@ -193,7 +188,7 @@ static DEFINE_PER_CPU(struct psi_group_cpu, system_group_pcpu);
 struct psi_group psi_system = {
 	.pcpu = &system_group_pcpu,
 };
-
+EXPORT_SYMBOL_GPL(psi_system);
 static void psi_avgs_work(struct work_struct *work);
 
 static void poll_timer_fn(struct timer_list *t);
@@ -358,11 +353,6 @@ static void collect_percpu_times(struct psi_group *group,
 	int cpu;
 	int s;
 
-#ifdef CONFIG_PROC_PSI_LOG
-	char buf[1024];
-	int pos = 0;
-#endif
-
 	/*
 	 * Collect the per-cpu time buckets and average them into a
 	 * single time sample that is normalized to wallclock time.
@@ -385,18 +375,7 @@ static void collect_percpu_times(struct psi_group *group,
 
 		for (s = 0; s < PSI_NONIDLE; s++)
 			deltas[s] += (u64)times[s] * nonidle;
-
-#ifdef CONFIG_PROC_PSI_LOG
-		pos += sprintf(buf + pos, "%d,%d,", times[PSI_CPU_SOME] / 1000000,
-				jiffies_to_msecs(nonidle));
-#endif
 	}
-
-#ifdef CONFIG_PROC_PSI_LOG
-	if (aggregator == PSI_POLL) {
-		PSI_LOG("%s", buf);
-	}
-#endif
 
 	/*
 	 * Integrate the sample into the running statistics that are
@@ -599,16 +578,15 @@ static u64 update_triggers(struct psi_group *group, u64 now)
 		if (now < t->last_event_time + t->win.size)
 			continue;
 
-		if ((t->win.size >= MONITOR_WINDOW_MIN_NS) &&
-		    (t->threshold >= MONITOR_THRESHOLD_MIN_NS))
-			printk_deferred("psi: %s %lu %lu %d %lu %lu\n", __func__, now,
-			       t->last_event_time, t->state, t->threshold, growth);
+		trace_android_vh_psi_event(t);
 
 		/* Generate an event */
 		if (cmpxchg(&t->event, 0, 1) == 0)
 			wake_up_interruptible(&t->event_wait);
 		t->last_event_time = now;
 	}
+
+	trace_android_vh_psi_group(group);
 
 	if (new_stall)
 		memcpy(group->polling_total, total,
@@ -1154,14 +1132,17 @@ int psi_show(struct seq_file *m, struct psi_group *group, enum psi_res res)
 	mutex_unlock(&group->avgs_lock);
 
 	for (full = 0; full < 2; full++) {
-		unsigned long avg[3];
-		u64 total;
+		unsigned long avg[3] = { 0, };
+		u64 total = 0;
 		int w;
 
-		for (w = 0; w < 3; w++)
-			avg[w] = group->avg[res * 2 + full][w];
-		total = div_u64(group->total[PSI_AVGS][res * 2 + full],
-				NSEC_PER_USEC);
+		/* CPU FULL is undefined at the system level */
+		if (!(group == &psi_system && res == PSI_CPU && full)) {
+			for (w = 0; w < 3; w++)
+				avg[w] = group->avg[res * 2 + full][w];
+			total = div_u64(group->total[PSI_AVGS][res * 2 + full],
+					NSEC_PER_USEC);
+		}
 
 		seq_printf(m, "%s avg10=%lu.%02lu avg60=%lu.%02lu avg300=%lu.%02lu total=%llu\n",
 			   full ? "full" : "some",
@@ -1258,10 +1239,11 @@ void psi_trigger_destroy(struct psi_trigger *t)
 
 	group = t->group;
 	/*
-	 * Wakeup waiters to stop polling. Can happen if cgroup is deleted
-	 * from under a polling process.
+	 * Wakeup waiters to stop polling and clear the queue to prevent it from
+	 * being accessed later. Can happen if cgroup is deleted from under a
+	 * polling process.
 	 */
-	wake_up_interruptible(&t->event_wait);
+	wake_up_pollfree(&t->event_wait);
 
 	mutex_lock(&group->trigger_lock);
 

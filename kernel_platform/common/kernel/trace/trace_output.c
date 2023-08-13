@@ -497,12 +497,10 @@ int trace_print_lat_fmt(struct trace_seq *s, struct trace_entry *entry)
 	else
 		trace_seq_putc(s, '.');
 
-	/* remove "migrate-disable" tag
 	if (entry->preempt_count & 0xf0)
 		trace_seq_printf(s, "%x", entry->preempt_count >> 4);
 	else
 		trace_seq_putc(s, '.');
-	*/
 
 	return !trace_seq_has_overflowed(s);
 }
@@ -1571,7 +1569,7 @@ static struct trace_event *events[] __initdata = {
 	NULL
 };
 
-__init static int init_events(void)
+__init int init_events(void)
 {
 	struct trace_event *event;
 	int i, ret;
@@ -1589,4 +1587,3 @@ __init static int init_events(void)
 
 	return 0;
 }
-early_initcall(init_events);

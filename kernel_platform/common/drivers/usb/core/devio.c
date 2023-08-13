@@ -174,6 +174,7 @@ static int connected(struct usb_dev_state *ps)
 static void dec_usb_memory_use_count(struct usb_memory *usbm, int *count)
 {
 	struct usb_dev_state *ps = usbm->ps;
+	struct usb_hcd *hcd = bus_to_hcd(ps->dev->bus);
 	unsigned long flags;
 
 	spin_lock_irqsave(&ps->lock, flags);
@@ -182,8 +183,8 @@ static void dec_usb_memory_use_count(struct usb_memory *usbm, int *count)
 		list_del(&usbm->memlist);
 		spin_unlock_irqrestore(&ps->lock, flags);
 
-		usb_free_coherent(ps->dev, usbm->size, usbm->mem,
-				usbm->dma_handle);
+		hcd_buffer_free_pages(hcd, usbm->size,
+				usbm->mem, usbm->dma_handle);
 		usbfs_decrease_memory_usage(
 			usbm->size + sizeof(struct usb_memory));
 		kfree(usbm);
@@ -222,7 +223,7 @@ static int usbdev_mmap(struct file *file, struct vm_area_struct *vma)
 	size_t size = vma->vm_end - vma->vm_start;
 	void *mem;
 	unsigned long flags;
-	dma_addr_t dma_handle;
+	dma_addr_t dma_handle = DMA_MAPPING_ERROR;
 	int ret;
 
 	ret = usbfs_increase_memory_usage(size + sizeof(struct usb_memory));
@@ -235,8 +236,8 @@ static int usbdev_mmap(struct file *file, struct vm_area_struct *vma)
 		goto error_decrease_mem;
 	}
 
-	mem = usb_alloc_coherent(ps->dev, size, GFP_USER | __GFP_NOWARN,
-			&dma_handle);
+	mem = hcd_buffer_alloc_pages(hcd,
+			size, GFP_USER | __GFP_NOWARN, &dma_handle);
 	if (!mem) {
 		ret = -ENOMEM;
 		goto error_free_usbm;
@@ -252,7 +253,14 @@ static int usbdev_mmap(struct file *file, struct vm_area_struct *vma)
 	usbm->vma_use_count = 1;
 	INIT_LIST_HEAD(&usbm->memlist);
 
-	if (hcd->localmem_pool || !hcd_uses_dma(hcd)) {
+	/*
+	 * In DMA-unavailable cases, hcd_buffer_alloc_pages allocates
+	 * normal pages and assigns DMA_MAPPING_ERROR to dma_handle. Check
+	 * whether we are in such cases, and then use remap_pfn_range (or
+	 * dma_mmap_coherent) to map normal (or DMA) pages into the user
+	 * space, respectively.
+	 */
+	if (dma_handle == DMA_MAPPING_ERROR) {
 		if (remap_pfn_range(vma, vma->vm_start,
 				    virt_to_phys(usbm->mem) >> PAGE_SHIFT,
 				    size, vma->vm_page_prot) < 0) {
@@ -1005,10 +1013,6 @@ static struct usb_device *usbdev_lookup_by_devt(dev_t devt)
 	return to_usb_device(dev);
 }
 
-#ifdef CONFIG_USB_DEBUG_DETAILED_LOG
-static unsigned int prev_cmd = 0;
-static int prev_ret = 0;
-#endif
 /*
  * file operations
  */
@@ -1059,10 +1063,6 @@ static int usbdev_open(struct inode *inode, struct file *file)
 	usb_unlock_device(dev);
 	snoop(&dev->dev, "opened by process %d: %s\n", task_pid_nr(current),
 			current->comm);
-#ifdef CONFIG_USB_DEBUG_DETAILED_LOG
-	prev_cmd = 0;
-	prev_ret = 0;
-#endif
 	return ret;
 
  out_unlock_device:
@@ -1390,9 +1390,6 @@ static int proc_resetep(struct usb_dev_state *ps, void __user *arg)
 	ret = checkintf(ps, ret);
 	if (ret)
 		return ret;
-#ifdef CONFIG_USB_DEBUG_DETAILED_LOG
-	dev_info(&ps->dev->dev,"%s epnum %d\n", __func__, ep);
-#endif
 	check_reset_of_active_ep(ps->dev, ep, "RESETEP");
 	usb_reset_endpoint(ps->dev, ep);
 	return 0;
@@ -1433,7 +1430,7 @@ static int proc_getdriver(struct usb_dev_state *ps, void __user *arg)
 	if (!intf || !intf->dev.driver)
 		ret = -ENODATA;
 	else {
-		strlcpy(gd.driver, intf->dev.driver->name,
+		strscpy(gd.driver, intf->dev.driver->name,
 				sizeof(gd.driver));
 		ret = (copy_to_user(arg, &gd, sizeof(gd)) ? -EFAULT : 0);
 	}
@@ -1496,9 +1493,6 @@ static int proc_resetdevice(struct usb_dev_state *ps)
 	 * privilege to do such things and any of the interfaces are
 	 * currently claimed.
 	 */
-#ifdef CONFIG_USB_DEBUG_DETAILED_LOG
-	dev_info(&ps->dev->dev,"%s\n", __func__);
-#endif
 	if (ps->privileges_dropped && actconfig) {
 		for (i = 0; i < actconfig->desc.bNumInterfaces; ++i) {
 			interface = actconfig->interface[i];
@@ -2289,9 +2283,6 @@ static int proc_claiminterface(struct usb_dev_state *ps, void __user *arg)
 
 	if (get_user(ifnum, (unsigned int __user *)arg))
 		return -EFAULT;
-#ifdef CONFIG_USB_DEBUG_DETAILED_LOG
-	dev_info(&ps->dev->dev,"%s: ifnum %d\n", __func__, ifnum);
-#endif
 	return claimintf(ps, ifnum);
 }
 
@@ -2302,9 +2293,6 @@ static int proc_releaseinterface(struct usb_dev_state *ps, void __user *arg)
 
 	if (get_user(ifnum, (unsigned int __user *)arg))
 		return -EFAULT;
-#ifdef CONFIG_USB_DEBUG_DETAILED_LOG
-	dev_info(&ps->dev->dev,"%s: ifnum %d\n", __func__, ifnum);
-#endif
 	ret = releaseintf(ps, ifnum);
 	if (ret < 0)
 		return ret;
@@ -2348,9 +2336,6 @@ static int proc_ioctl(struct usb_dev_state *ps, struct usbdevfs_ioctl *ctl)
 		retval = -EINVAL;
 	else switch (ctl->ioctl_code) {
 
-#ifdef CONFIG_USB_DEBUG_DETAILED_LOG
-	dev_info(&ps->dev->dev,"%s ioctl_code %d\n", __func__, ctl->ioctl_code);
-#endif
 	/* disconnect kernel driver from interface */
 	case USBDEVFS_DISCONNECT:
 		if (intf->dev.driver) {
@@ -2487,12 +2472,7 @@ static int proc_disconnect_claim(struct usb_dev_state *ps, void __user *arg)
 					sizeof(dc.driver)) == 0)
 			return -EBUSY;
 
-#ifdef CONFIG_USB_DEBUG_DETAILED_LOG
-		dev_info(&intf->dev, "%s,intfnum %d disconnect by usbfs\n",
-				__func__, dc.interface);
-#else
 		dev_dbg(&intf->dev, "disconnect by usbfs\n");
-#endif
 		usb_driver_release_interface(driver, intf);
 	}
 
@@ -2815,102 +2795,12 @@ static long usbdev_do_ioctl(struct file *file, unsigned int cmd,
 	return ret;
 }
 
-#ifdef CONFIG_USB_DEBUG_DETAILED_LOG
-static int usbdev_log(unsigned int cmd, int ret)
-{
-	char *cmd_string;
-
-	switch (cmd) {
-	case USBDEVFS_CONTROL:
-		cmd_string = "CONTROL";
-		break;
-	case USBDEVFS_BULK:
-		cmd_string = "BULK";
-		break;
-	case USBDEVFS_RESETEP:
-		cmd_string = "RESETEP";
-		break;
-	case USBDEVFS_RESET:
-		cmd_string = "RESET";
-		break;
-	case USBDEVFS_CLEAR_HALT:
-		cmd_string = "CLEAR_HALT";
-		break;
-	case USBDEVFS_GETDRIVER:
-		cmd_string = "GETDRIVER";
-		break;
-	case USBDEVFS_CONNECTINFO:
-		cmd_string = "CONNECTINFO";
-		break;
-	case USBDEVFS_SETINTERFACE:
-		cmd_string = "SETINTERFACE";
-		break;
-	case USBDEVFS_SETCONFIGURATION:
-		cmd_string = "SETCONFIGURATION";
-		break;
-	case USBDEVFS_SUBMITURB:
-		cmd_string = "SUBMITURB";
-		break;
-	case USBDEVFS_DISCARDURB:
-		cmd_string = "DISCARDURB";
-		break;
-	case USBDEVFS_REAPURB:
-		cmd_string = "REAPURB";
-		break;
-	case USBDEVFS_REAPURBNDELAY:
-		cmd_string = "REAPURBNDELAY";
-		break;
-	case USBDEVFS_DISCSIGNAL:
-		cmd_string = "DISCSIGNAL";
-		break;
-	case USBDEVFS_CLAIMINTERFACE:
-		cmd_string = "CLAIMINTERFACE";
-		break;
-	case USBDEVFS_RELEASEINTERFACE:
-		cmd_string = "RELEASEINTERFACE";
-		break;
-	case USBDEVFS_IOCTL:
-		cmd_string = "IOCTL";
-		break;
-	case USBDEVFS_CLAIM_PORT:
-		cmd_string = "CLAIM_PORT";
-		break;
-	case USBDEVFS_RELEASE_PORT:
-		cmd_string = "RELEASE_PORT";
-		break;
-	case USBDEVFS_GET_CAPABILITIES:
-		cmd_string = "GET_CAPABILITIES";
-		break;
-	case USBDEVFS_DISCONNECT_CLAIM:
-		cmd_string = "DISCONNECT_CLAIM";
-		break;
-	default:
-		cmd_string = "DEFAULT";
-		break;
-	}
-	if ((prev_cmd != cmd) || (prev_ret != ret)) {
-		printk(KERN_ERR "%s: %s error ret=%d\n", __func__, cmd_string, ret);
-		prev_cmd = cmd;
-		prev_ret = ret;
-	}
-	return 0;
-}
-#endif
-
 static long usbdev_ioctl(struct file *file, unsigned int cmd,
 			unsigned long arg)
 {
 	int ret;
 
 	ret = usbdev_do_ioctl(file, cmd, (void __user *)arg);
-#ifdef CONFIG_USB_DEBUG_DETAILED_LOG
-	if (ret < 0)
-		usbdev_log(cmd, ret);
-	else {
-		prev_cmd = 0;
-		prev_ret = 0;
-	}
-#endif
 
 	return ret;
 }

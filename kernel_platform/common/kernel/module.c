@@ -59,9 +59,6 @@
 #include <linux/audit.h>
 #include <uapi/linux/module.h>
 #include "module-internal.h"
-#ifdef CONFIG_RKP
-#include <linux/rkp.h>
-#endif
 
 #define CREATE_TRACE_POINTS
 #include <trace/events/module.h>
@@ -923,9 +920,6 @@ SYSCALL_DEFINE2(delete_module, const char __user *, name_user,
 	struct module *mod;
 	char name[MODULE_NAME_LEN];
 	int ret, forced = 0;
-#ifdef CONFIG_RKP
-	struct module_info rkp_mod_info;
-#endif
 
 	if (!capable(CAP_SYS_MODULE) || modules_disabled)
 		return -EPERM;
@@ -988,17 +982,6 @@ SYSCALL_DEFINE2(delete_module, const char __user *, name_user,
 	/* Store the name of the last unloaded module for diagnostic purposes */
 	strlcpy(last_unloaded_module, mod->name, sizeof(last_unloaded_module));
 
-#ifdef CONFIG_RKP
-	rkp_mod_info.base_va = 0;
-	rkp_mod_info.vm_size = 0;
-	rkp_mod_info.core_base_va = (u64)mod->core_layout.base;
-	rkp_mod_info.core_text_size = (u64)mod->core_layout.text_size;
-	rkp_mod_info.core_ro_size = (u64)mod->core_layout.ro_size;
-	rkp_mod_info.init_base_va = 0;
-	rkp_mod_info.init_text_size = 0;
-
-	uh_call(UH_APP_RKP, RKP_MODULE_LOAD, RKP_MODULE_PXN_SET, (u64)&rkp_mod_info, 0, 0);
-#endif
 	free_module(mod);
 	/* someone could wait for the module in add_unformed_module() */
 	wake_up_all(&module_wq);
@@ -3021,14 +3004,29 @@ static int elf_validity_check(struct load_info *info)
 	Elf_Shdr *shdr, *strhdr;
 	int err;
 
-	if (info->len < sizeof(*(info->hdr)))
-		return -ENOEXEC;
+	if (info->len < sizeof(*(info->hdr))) {
+		pr_err("Invalid ELF header len %lu\n", info->len);
+		goto no_exec;
+	}
 
-	if (memcmp(info->hdr->e_ident, ELFMAG, SELFMAG) != 0
-	    || info->hdr->e_type != ET_REL
-	    || !elf_check_arch(info->hdr)
-	    || info->hdr->e_shentsize != sizeof(Elf_Shdr))
-		return -ENOEXEC;
+	if (memcmp(info->hdr->e_ident, ELFMAG, SELFMAG) != 0) {
+		pr_err("Invalid ELF header magic: != %s\n", ELFMAG);
+		goto no_exec;
+	}
+	if (info->hdr->e_type != ET_REL) {
+		pr_err("Invalid ELF header type: %u != %u\n",
+		       info->hdr->e_type, ET_REL);
+		goto no_exec;
+	}
+	if (!elf_check_arch(info->hdr)) {
+		pr_err("Invalid architecture in ELF header: %u\n",
+		       info->hdr->e_machine);
+		goto no_exec;
+	}
+	if (info->hdr->e_shentsize != sizeof(Elf_Shdr)) {
+		pr_err("Invalid ELF section header size\n");
+		goto no_exec;
+	}
 
 	/*
 	 * e_shnum is 16 bits, and sizeof(Elf_Shdr) is
@@ -3037,8 +3035,10 @@ static int elf_validity_check(struct load_info *info)
 	 */
 	if (info->hdr->e_shoff >= info->len
 	    || (info->hdr->e_shnum * sizeof(Elf_Shdr) >
-		info->len - info->hdr->e_shoff))
-		return -ENOEXEC;
+		info->len - info->hdr->e_shoff)) {
+		pr_err("Invalid ELF section header overflow\n");
+		goto no_exec;
+	}
 
 	info->sechdrs = (void *)info->hdr + info->hdr->e_shoff;
 
@@ -3046,13 +3046,19 @@ static int elf_validity_check(struct load_info *info)
 	 * Verify if the section name table index is valid.
 	 */
 	if (info->hdr->e_shstrndx == SHN_UNDEF
-	    || info->hdr->e_shstrndx >= info->hdr->e_shnum)
-		return -ENOEXEC;
+	    || info->hdr->e_shstrndx >= info->hdr->e_shnum) {
+		pr_err("Invalid ELF section name index: %d || e_shstrndx (%d) >= e_shnum (%d)\n",
+		       info->hdr->e_shstrndx, info->hdr->e_shstrndx,
+		       info->hdr->e_shnum);
+		goto no_exec;
+	}
 
 	strhdr = &info->sechdrs[info->hdr->e_shstrndx];
 	err = validate_section_offset(info, strhdr);
-	if (err < 0)
+	if (err < 0) {
+		pr_err("Invalid ELF section hdr(type %u)\n", strhdr->sh_type);
 		return err;
+	}
 
 	/*
 	 * The section name table must be NUL-terminated, as required
@@ -3060,8 +3066,14 @@ static int elf_validity_check(struct load_info *info)
 	 * strings in the section safe.
 	 */
 	info->secstrings = (void *)info->hdr + strhdr->sh_offset;
-	if (info->secstrings[strhdr->sh_size - 1] != '\0')
-		return -ENOEXEC;
+	if (strhdr->sh_size == 0) {
+		pr_err("empty section name table\n");
+		goto no_exec;
+	}
+	if (info->secstrings[strhdr->sh_size - 1] != '\0') {
+		pr_err("ELF Spec violation: section name table isn't null terminated\n");
+		goto no_exec;
+	}
 
 	/*
 	 * The code assumes that section 0 has a length of zero and
@@ -3069,8 +3081,11 @@ static int elf_validity_check(struct load_info *info)
 	 */
 	if (info->sechdrs[0].sh_type != SHT_NULL
 	    || info->sechdrs[0].sh_size != 0
-	    || info->sechdrs[0].sh_addr != 0)
-		return -ENOEXEC;
+	    || info->sechdrs[0].sh_addr != 0) {
+		pr_err("ELF Spec violation: section 0 type(%d)!=SH_NULL or non-zero len or addr\n",
+		       info->sechdrs[0].sh_type);
+		goto no_exec;
+	}
 
 	for (i = 1; i < info->hdr->e_shnum; i++) {
 		shdr = &info->sechdrs[i];
@@ -3080,8 +3095,12 @@ static int elf_validity_check(struct load_info *info)
 			continue;
 		case SHT_SYMTAB:
 			if (shdr->sh_link == SHN_UNDEF
-			    || shdr->sh_link >= info->hdr->e_shnum)
-				return -ENOEXEC;
+			    || shdr->sh_link >= info->hdr->e_shnum) {
+				pr_err("Invalid ELF sh_link!=SHN_UNDEF(%d) or (sh_link(%d) >= hdr->e_shnum(%d)\n",
+				       shdr->sh_link, shdr->sh_link,
+				       info->hdr->e_shnum);
+				goto no_exec;
+			}
 			fallthrough;
 		default:
 			err = validate_section_offset(info, shdr);
@@ -3103,6 +3122,9 @@ static int elf_validity_check(struct load_info *info)
 	}
 
 	return 0;
+
+no_exec:
+	return -ENOEXEC;
 }
 
 #define COPY_CHUNK_SIZE (16*PAGE_SIZE)
@@ -3437,11 +3459,7 @@ static int move_module(struct module *mod, struct load_info *info)
 	void *ptr;
 
 	/* Do the allocs. */
-#ifdef CONFIG_RKP
-	ptr = module_alloc_by_rkp(mod->core_layout.size, mod->core_layout.text_size);
-#else
 	ptr = module_alloc(mod->core_layout.size);
-#endif
 	/*
 	 * The pointer to this block is stored in the module structure
 	 * which is inside the block. Just mark it as not being a
@@ -3692,7 +3710,8 @@ static bool finished_loading(const char *name)
 	sched_annotate_sleep();
 	mutex_lock(&module_mutex);
 	mod = find_module_all(name, strlen(name), true);
-	ret = !mod || mod->state == MODULE_STATE_LIVE;
+	ret = !mod || mod->state == MODULE_STATE_LIVE
+		|| mod->state == MODULE_STATE_GOING;
 	mutex_unlock(&module_mutex);
 
 	return ret;
@@ -3741,9 +3760,6 @@ static noinline int do_init_module(struct module *mod)
 {
 	int ret = 0;
 	struct mod_initfree *freeinit;
-#ifdef CONFIG_RKP
-	struct module_info rkp_mod_info;
-#endif
 
 	freeinit = kmalloc(sizeof(*freeinit), GFP_KERNEL);
 	if (!freeinit) {
@@ -3804,17 +3820,6 @@ static noinline int do_init_module(struct module *mod)
 		(mod->init_layout.size)>>PAGE_SHIFT);
 	trace_android_vh_set_memory_nx((unsigned long)mod->init_layout.base,
 		(mod->init_layout.size)>>PAGE_SHIFT);
-#ifdef CONFIG_RKP
-	rkp_mod_info.base_va = 0;
-	rkp_mod_info.vm_size = 0;
-	rkp_mod_info.core_base_va = 0;
-	rkp_mod_info.core_text_size = 0;
-	rkp_mod_info.core_ro_size = 0;
-	rkp_mod_info.init_base_va = (u64)mod->init_layout.base;
-	rkp_mod_info.init_text_size = (u64)mod->init_layout.text_size;
-
-	uh_call(UH_APP_RKP, RKP_MODULE_LOAD, RKP_MODULE_PXN_SET, (u64)&rkp_mod_info, 0, 0);
-#endif
 	mod->init_layout.base = NULL;
 	mod->init_layout.size = 0;
 	mod->init_layout.ro_size = 0;
@@ -3856,17 +3861,6 @@ fail:
 				     MODULE_STATE_GOING, mod);
 	klp_module_going(mod);
 	ftrace_release_mod(mod);
-#ifdef CONFIG_RKP
-	rkp_mod_info.base_va = 0;
-	rkp_mod_info.vm_size = 0;
-	rkp_mod_info.core_base_va = (u64)mod->core_layout.base;
-	rkp_mod_info.core_text_size = (u64)mod->core_layout.text_size;
-	rkp_mod_info.core_ro_size = (u64)mod->core_layout.ro_size;
-	rkp_mod_info.init_base_va = (u64)mod->init_layout.base;
-	rkp_mod_info.init_text_size = (u64)mod->init_layout.text_size;
-
-	uh_call(UH_APP_RKP, RKP_MODULE_LOAD, RKP_MODULE_PXN_SET, (u64)&rkp_mod_info, 0, 0);
-#endif
 	free_module(mod);
 	wake_up_all(&module_wq);
 	return ret;
@@ -3892,20 +3886,35 @@ static int add_unformed_module(struct module *mod)
 
 	mod->state = MODULE_STATE_UNFORMED;
 
-again:
 	mutex_lock(&module_mutex);
 	old = find_module_all(mod->name, strlen(mod->name), true);
 	if (old != NULL) {
-		if (old->state != MODULE_STATE_LIVE) {
+		if (old->state == MODULE_STATE_COMING
+		    || old->state == MODULE_STATE_UNFORMED) {
 			/* Wait in case it fails to load. */
 			mutex_unlock(&module_mutex);
 			err = wait_event_interruptible(module_wq,
 					       finished_loading(mod->name));
 			if (err)
 				goto out_unlocked;
-			goto again;
+
+			/* The module might have gone in the meantime. */
+			mutex_lock(&module_mutex);
+			old = find_module_all(mod->name, strlen(mod->name),
+					      true);
 		}
-		err = -EEXIST;
+
+		/*
+		 * We are here only when the same module was being loaded. Do
+		 * not try to load it again right now. It prevents long delays
+		 * caused by serialized module load failures. It might happen
+		 * when more devices of the same type trigger load of
+		 * a particular module.
+		 */
+		if (old && old->state == MODULE_STATE_LIVE)
+			err = -EEXIST;
+		else
+			err = -EBUSY;
 		goto out;
 	}
 	mod_update_bounds(mod);
@@ -3922,9 +3931,6 @@ out_unlocked:
 static int complete_formation(struct module *mod, struct load_info *info)
 {
 	int err;
-#ifdef CONFIG_RKP
-	struct module_info rkp_mod_info;
-#endif
 
 	mutex_lock(&module_mutex);
 
@@ -3946,17 +3952,6 @@ static int complete_formation(struct module *mod, struct load_info *info)
 	 * but kallsyms etc. can see us.
 	 */
 	mod->state = MODULE_STATE_COMING;
-#ifdef CONFIG_RKP
-	rkp_mod_info.base_va = 0;
-	rkp_mod_info.vm_size = 0;
-	rkp_mod_info.core_base_va = (u64)mod->core_layout.base;
-	rkp_mod_info.core_text_size = (u64)mod->core_layout.text_size;
-	rkp_mod_info.core_ro_size = (u64)mod->core_layout.ro_size;
-	rkp_mod_info.init_base_va = (u64)mod->init_layout.base;
-	rkp_mod_info.init_text_size = (u64)mod->init_layout.text_size;
-
-	uh_call(UH_APP_RKP, RKP_MODULE_LOAD, RKP_MODULE_PXN_CLEAR, (u64)&rkp_mod_info, 0, 0);
-#endif
 	mutex_unlock(&module_mutex);
 
 	return 0;
@@ -4014,9 +4009,6 @@ static int load_module(struct load_info *info, const char __user *uargs,
 	struct module *mod;
 	long err = 0;
 	char *after_dashes;
-#ifdef CONFIG_RKP
-	struct module_info rkp_mod_info;
-#endif
 
 	/*
 	 * Do the signature check (if any) first. All that
@@ -4039,10 +4031,8 @@ static int load_module(struct load_info *info, const char __user *uargs,
 	 * sections.
 	 */
 	err = elf_validity_check(info);
-	if (err) {
-		pr_err("Module has invalid ELF structures\n");
+	if (err)
 		goto free_copy;
-	}
 
 	/*
 	 * Everything checks out, so set up the section info
@@ -4210,17 +4200,7 @@ static int load_module(struct load_info *info, const char __user *uargs,
 	mutex_lock(&module_mutex);
 	module_bug_cleanup(mod);
 	mutex_unlock(&module_mutex);
-#ifdef CONFIG_RKP
-	rkp_mod_info.base_va = 0;
-	rkp_mod_info.vm_size = 0;
-	rkp_mod_info.core_base_va = (u64)mod->core_layout.base;
-	rkp_mod_info.core_text_size = (u64)mod->core_layout.text_size;
-	rkp_mod_info.core_ro_size = (u64)mod->core_layout.ro_size;
-	rkp_mod_info.init_base_va = (u64)mod->init_layout.base;
-	rkp_mod_info.init_text_size = (u64)mod->init_layout.text_size;
 
-	uh_call(UH_APP_RKP, RKP_MODULE_LOAD, RKP_MODULE_PXN_SET, (u64)&rkp_mod_info, 0, 0);
-#endif
  ddebug_cleanup:
 	ftrace_release_mod(mod);
 	dynamic_debug_remove(mod, info->debug);
