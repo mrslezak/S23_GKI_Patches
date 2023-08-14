@@ -9,7 +9,6 @@
 
 #ifndef __GENKSYMS__
 struct cgroup_taskset;
-struct cgroup_subsys;
 #else
 /* struct cgroup_taskset */
 #include <../kernel/cgroup/cgroup-internal.h>
@@ -21,9 +20,7 @@ struct cgroup_subsys;
 DECLARE_HOOK(android_vh_cgroup_set_task,
 	TP_PROTO(int ret, struct task_struct *task),
 	TP_ARGS(ret, task));
-DECLARE_RESTRICTED_HOOK(android_rvh_refrigerator,
-	TP_PROTO(bool f),
-	TP_ARGS(f), 1);
+
 DECLARE_HOOK(android_vh_cgroup_attach,
 	TP_PROTO(struct cgroup_subsys *ss, struct cgroup_taskset *tset),
 	TP_ARGS(ss, tset))

@@ -746,9 +746,6 @@ void __cfg80211_connect_result(struct net_device *dev,
 			if (WARN_ON(!cr->links[link].addr))
 				goto out;
 		}
-
-		if (WARN_ON(wdev->connect_keys))
-			goto out;
 	}
 
 	wdev->unprot_beacon_reported = 0;
@@ -1238,8 +1235,7 @@ void __cfg80211_port_authorized(struct wireless_dev *wdev, const u8 *bssid)
 {
 	ASSERT_WDEV_LOCK(wdev);
 
-	if (WARN_ON(wdev->iftype != NL80211_IFTYPE_STATION &&
-                    wdev->iftype != NL80211_IFTYPE_P2P_CLIENT))
+	if (WARN_ON(wdev->iftype != NL80211_IFTYPE_STATION))
 		return;
 
 	if (WARN_ON(!wdev->connected) ||
